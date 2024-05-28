@@ -111,6 +111,24 @@ def get_birth_date(name: str) -> str:
 
     return match.group("birth")
 
+def get_presidential_term(name: str) -> str:
+    """Gets the presidential term of the given U.S. President
+
+    Args:
+        name - name of a U.S. President
+
+    Returns:
+        Presidential term of the given President
+    """
+    infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
+    pattern = r"(?:President of the United StatesIn office)(?P<term>\w+\s\d?\d,\s\d{4}\s\w+\s\d?\d,\s\d{4})"
+    error_text = (
+        "Page infobox has no presidential terms info"
+    )
+    match = get_match(infobox_text, pattern, error_text)
+
+    return match.group("term")
+
 
 # below are a set of actions. Each takes a list argument and returns a list of answers
 # according to the action and the argument. It is important that each function returns a
@@ -128,7 +146,6 @@ def birth_date(matches: List[str]) -> List[str]:
     """
     return [get_birth_date(" ".join(matches))]
 
-
 def polar_radius(matches: List[str]) -> List[str]:
     """Returns polar radius of planet in matches
 
@@ -139,6 +156,17 @@ def polar_radius(matches: List[str]) -> List[str]:
         polar radius of planet
     """
     return [get_polar_radius(matches[0])]
+
+def presidential_term(matches: List[str]) -> List[str]:
+    """Returns presidential term of president in matches
+
+    Args:
+        matches - match from pattern of president's name to find their presidential term
+
+    Returns:
+        presidential term of president
+    """
+    return [get_presidential_term(matches[0])]
 
 
 # dummy argument is ignored and doesn't matter
@@ -156,6 +184,7 @@ Action = Callable[[List[str]], List[Any]]
 pa_list: List[Tuple[Pattern, Action]] = [
     ("when was % born".split(), birth_date),
     ("what is the polar radius of %".split(), polar_radius),
+    ("when was % in office".split(), presidential_term),
     (["bye"], bye_action),
 ]
 
@@ -184,7 +213,7 @@ def search_pa_list(src: List[str]) -> List[str]:
 def query_loop() -> None:
     """The simple query loop. The try/except structure is to catch Ctrl-C or Ctrl-D
     characters and exit gracefully"""
-    print("Welcome to the movie database!\n")
+    print("Welcome to the wikipedia database!\n")
     while True:
         try:
             print()
@@ -198,6 +227,8 @@ def query_loop() -> None:
 
     print("\nSo long!\n")
 
+# print(clean_text(get_first_infobox_text(get_page_html("Chicago"))))
+# how many people live in %
 
 # uncomment the next line once you've implemented everything are ready to try it out
 query_loop()
