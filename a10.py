@@ -129,6 +129,42 @@ def get_presidential_term(name: str) -> str:
 
     return match.group("term")
 
+def get_city_population(name: str) -> str:
+    """Gets the population size of given city
+
+    Args:
+        name - name of a city
+
+    Returns:
+        Population size of given city
+    """
+    infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
+    # pattern = r"(?:Population.+City)(?P<population>[\d,]+)"
+    pattern = r"(?:Population.+]\D+)(?P<population>[\d,]+"
+    error_text = (
+        "Page infobox has no population info"
+    )
+    match = get_match(infobox_text, pattern, error_text)
+
+    return match.group("population")
+
+def get_GDP(name: str) -> str:
+    """Gets the GDP of given country
+
+    Args:
+        name - name of a country
+
+    Returns:
+        GDP of given country
+    """
+    infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
+    pattern = r"(?:GDP.+$)(?P<gdp>[\d.,]+illion)"
+    error_text = (
+        "Page infobox has no GDP info"
+    )
+    match = get_match(infobox_text, pattern, error_text)
+
+    return match.group("gdp")
 
 # below are a set of actions. Each takes a list argument and returns a list of answers
 # according to the action and the argument. It is important that each function returns a
@@ -168,6 +204,27 @@ def presidential_term(matches: List[str]) -> List[str]:
     """
     return [get_presidential_term(matches[0])]
 
+def city_population(matches: List[str]) -> List[str]:
+    """Returns presidential term of president in matches
+
+    Args:
+        matches - match from pattern of president's name to find their presidential term
+
+    Returns:
+        presidential term of president
+    """
+    return [get_city_population(matches[0])]
+
+def country_GDP(matches: List[str]) -> List[str]:
+    """Returns presidential term of president in matches
+
+    Args:
+        matches - match from pattern of president's name to find their presidential term
+
+    Returns:
+        presidential term of president
+    """
+    return [get_GDP(matches[0])]
 
 # dummy argument is ignored and doesn't matter
 def bye_action(dummy: List[str]) -> None:
@@ -185,6 +242,8 @@ pa_list: List[Tuple[Pattern, Action]] = [
     ("when was % born".split(), birth_date),
     ("what is the polar radius of %".split(), polar_radius),
     ("when was % in office".split(), presidential_term),
+    ("how many people live in %".split(), city_population),
+    ("what is the GDP of %".split(), country_GDP),
     (["bye"], bye_action),
 ]
 
@@ -227,8 +286,7 @@ def query_loop() -> None:
 
     print("\nSo long!\n")
 
-# print(clean_text(get_first_infobox_text(get_page_html("Chicago"))))
-# how many people live in %
+# print(clean_text(get_first_infobox_text(get_page_html("france"))))
 
 # uncomment the next line once you've implemented everything are ready to try it out
 query_loop()
