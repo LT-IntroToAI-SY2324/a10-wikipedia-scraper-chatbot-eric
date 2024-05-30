@@ -139,8 +139,8 @@ def get_city_population(name: str) -> str:
         Population size of given city
     """
     infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
-    # pattern = r"(?:Population.+City)(?P<population>[\d,]+)"
-    pattern = r"(?:Population.+]\D+)(?P<population>[\d,]+"
+    # pattern = r"(?:Population.+?\]\s+\D+)(?P<population>[\d,]+)"
+    pattern = r"(?:Population.+?\]\s*\D*)(?P<population>[\d,]+)"
     error_text = (
         "Page infobox has no population info"
     )
@@ -158,7 +158,8 @@ def get_GDP(name: str) -> str:
         GDP of given country
     """
     infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
-    pattern = r"(?:GDP.+$)(?P<gdp>[\d.,]+illion)"
+    # pattern = r"(?:GDP.+$)(?P<gdp>[\d.,]+illion)"
+    pattern = r"(?:GDP.+Total\s)(?P<gdp>[\d$.,]+\s\w+)"
     error_text = (
         "Page infobox has no GDP info"
     )
@@ -243,7 +244,7 @@ pa_list: List[Tuple[Pattern, Action]] = [
     ("what is the polar radius of %".split(), polar_radius),
     ("when was % in office".split(), presidential_term),
     ("how many people live in %".split(), city_population),
-    ("what is the GDP of %".split(), country_GDP),
+    ("what is the gdp of %".split(), country_GDP),
     (["bye"], bye_action),
 ]
 
@@ -286,7 +287,8 @@ def query_loop() -> None:
 
     print("\nSo long!\n")
 
-# print(clean_text(get_first_infobox_text(get_page_html("france"))))
+# print(clean_text(get_first_infobox_text(get_page_html("cairo"))))
+# print(clean_text(get_first_infobox_text(get_page_html("paris"))))
 
-# uncomment the next line once you've implemented everything are ready to try it out
+
 query_loop()
