@@ -139,7 +139,6 @@ def get_city_population(name: str) -> str:
         Population size of given city
     """
     infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
-    # pattern = r"(?:Population.+?\]\s+\D+)(?P<population>[\d,]+)"
     pattern = r"(?:Population.+?\]\s*\D*)(?P<population>[\d,]+)"
     error_text = (
         "Page infobox has no population info"
@@ -158,7 +157,6 @@ def get_GDP(name: str) -> str:
         GDP of given country
     """
     infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
-    # pattern = r"(?:GDP.+$)(?P<gdp>[\d.,]+illion)"
     pattern = r"(?:GDP.+Total\s)(?P<gdp>[\d$.,]+\s\w+)"
     error_text = (
         "Page infobox has no GDP info"
@@ -170,7 +168,6 @@ def get_GDP(name: str) -> str:
 # below are a set of actions. Each takes a list argument and returns a list of answers
 # according to the action and the argument. It is important that each function returns a
 # list of the answer(s) and not just the answer itself.
-
 
 def birth_date(matches: List[str]) -> List[str]:
     """Returns birth date of named person in matches
@@ -287,8 +284,8 @@ def query_loop() -> None:
 
     print("\nSo long!\n")
 
-# print(clean_text(get_first_infobox_text(get_page_html("cairo"))))
-# print(clean_text(get_first_infobox_text(get_page_html("paris"))))
+print(clean_text(get_first_infobox_text(get_page_html("stockholm"))))
 
+# cairo, stockholm, warsaw
 
-query_loop()
+# query_loop()
