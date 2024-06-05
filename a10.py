@@ -284,8 +284,4 @@ def query_loop() -> None:
 
     print("\nSo long!\n")
 
-print(clean_text(get_first_infobox_text(get_page_html("stockholm"))))
-
-# cairo, stockholm, warsaw
-
-# query_loop()
+query_loop()
